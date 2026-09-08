@@ -1,3 +1,16 @@
 spring:
   application:
     name: customer-service
+
+  datasource:
+    url: ${CUSTOMER_URL:jdbc:postgresql://localhost:5432/customer_db}
+    username: ${CUSTOMER_USERNAME:postgres}
+    password: ${CUSTOMER_PASSWORD:postgres}
+
+  jpa:
+    hibernate:
+      ddl-auto: update
+    open-in-view: false
+
+server:
+  port: ${CUSTOMER_PORT:8081}
