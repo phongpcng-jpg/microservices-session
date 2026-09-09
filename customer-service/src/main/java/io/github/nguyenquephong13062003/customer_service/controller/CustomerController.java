@@ -6,6 +6,7 @@ import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
+import io.github.nguyenquephong13062003.customer_service.common.response.ApiResponse;
 import io.github.nguyenquephong13062003.customer_service.dto.request.CustomerRequest;
 import io.github.nguyenquephong13062003.customer_service.dto.response.CustomerResponse;
 import io.github.nguyenquephong13062003.customer_service.service.ICustomerService;
@@ -33,25 +34,33 @@ public class CustomerController {
      * @return a ResponseEntity containing the created CustomerResponse DTO and HTTP status
      */
     @PostMapping
-    public ResponseEntity<CustomerResponse> create(
-            @Valid @RequestBody CustomerRequest request) {
+    public ResponseEntity<ApiResponse<CustomerResponse>> create(
+            @Valid @RequestBody CustomerRequest request
+    ) {
+
+        CustomerResponse response = customerService.create(request);
 
         return ResponseEntity
                 .status(HttpStatus.CREATED)
-                .body(customerService.create(request));
+                .body(ApiResponse.success(response, "Customer created successfully"));
+
     }
 
     /**
      * Retrieves a customer by their unique identifier.
      *
      * @param id the unique identifier of the customer
-     * @return a ResponseEntity containing the retrieved CustomerResponse DTO and HTTP status
+     * @return a ResponseEntity containing the CustomerResponse DTO and HTTP status
      */
     @GetMapping("/{id}")
-    public ResponseEntity<CustomerResponse> findById(
-            @PathVariable Long id) {
+    public ResponseEntity<ApiResponse<CustomerResponse>> findById(
+            @PathVariable Long id
+    ) {
+        CustomerResponse response = customerService.findById(id);
 
-        return ResponseEntity.ok(customerService.findById(id));
+        return ResponseEntity.ok(
+                ApiResponse.success(response, "Customer retrieved successfully")
+        );
     }
 
     /**
@@ -60,24 +69,30 @@ public class CustomerController {
      * @return a ResponseEntity containing a list of CustomerResponse DTOs and HTTP status
      */
     @GetMapping
-    public ResponseEntity<List<CustomerResponse>> findAll() {
-        return ResponseEntity.ok(customerService.findAll());
+    public ResponseEntity<ApiResponse<List<CustomerResponse>>> findAll() {
+        List<CustomerResponse> response = customerService.findAll();
+
+        return ResponseEntity.ok(
+                ApiResponse.success(response, "Customers retrieved successfully")
+        );
     }
 
     /**
-     * Updates an existing customer identified by their unique identifier with the provided CustomerRequest DTO.
+     * Updates an existing customer based on the provided CustomerRequest DTO.
      *
      * @param id      the unique identifier of the customer to be updated
      * @param request the CustomerRequest DTO containing updated customer data
      * @return a ResponseEntity containing the updated CustomerResponse DTO and HTTP status
      */
     @PutMapping("/{id}")
-    public ResponseEntity<CustomerResponse> update(
+    public ResponseEntity<ApiResponse<CustomerResponse>> update(
             @PathVariable Long id,
-            @Valid @RequestBody CustomerRequest request) {
+            @Valid @RequestBody CustomerRequest request
+    ) {
+        CustomerResponse response = customerService.update(id, request);
 
         return ResponseEntity.ok(
-                customerService.update(id, request)
+                ApiResponse.success(response, "Customer updated successfully")
         );
     }
 
@@ -85,15 +100,17 @@ public class CustomerController {
      * Deletes a customer by their unique identifier.
      *
      * @param id the unique identifier of the customer to be deleted
-     * @return a ResponseEntity with HTTP status indicating the result of the operation
+     * @return a ResponseEntity containing an ApiResponse indicating success and HTTP status
      */
     @DeleteMapping("/{id}")
-    public ResponseEntity<Void> delete(
-            @PathVariable Long id) {
-
+    public ResponseEntity<ApiResponse<Void>> delete(
+            @PathVariable Long id
+    ) {
         customerService.delete(id);
 
-        return ResponseEntity.noContent().build();
+        return ResponseEntity.ok(
+                ApiResponse.success(null, "Customer deleted successfully")
+        );
     }
     
 }
