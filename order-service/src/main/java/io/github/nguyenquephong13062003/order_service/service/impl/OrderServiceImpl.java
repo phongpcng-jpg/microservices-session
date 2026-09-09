@@ -1,5 +1,7 @@
 package io.github.nguyenquephong13062003.order_service.service.impl;
 
+import io.github.nguyenquephong13062003.order_service.client.ProductServiceClient;
+import io.github.nguyenquephong13062003.order_service.common.exception.ProductServiceUnavailableException;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
@@ -30,6 +32,11 @@ public class OrderServiceImpl implements IOrderService {
      * Mapper for converting between Order entities and DTOs.
      */
     private final OrderMapper orderMapper;
+
+    /**
+     * Client for discovering and communicating with Product Service.
+     */
+    private final ProductServiceClient productServiceClient;
 
     @Override
     @Transactional
@@ -94,6 +101,20 @@ public class OrderServiceImpl implements IOrderService {
         }
 
         orderRepository.deleteById(id);
+    }
+
+    @Override
+    public String findProductById(Long productId) {
+        try {
+            return productServiceClient.findProductById(productId);
+        } catch (ProductServiceUnavailableException exception) {
+            throw exception;
+        } catch (Exception exception) {
+            throw new ProductServiceUnavailableException(
+                    "Product Service is unavailable",
+                    exception
+            );
+        }
     }
 
 }

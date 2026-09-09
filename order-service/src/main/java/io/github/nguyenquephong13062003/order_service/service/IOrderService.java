@@ -56,5 +56,13 @@ public interface IOrderService {
      * @param id order ID
      */
     void delete(Long id);
+
+    /**
+     * Retrieves a product from Product Service through Eureka discovery.
+     *
+     * @param productId product ID
+     * @return Product Service response
+     */
+    String findProductById(Long productId);
     
 }

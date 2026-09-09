@@ -83,5 +83,20 @@ public class GlobalExceptionHandler {
                 .status(HttpStatus.INTERNAL_SERVER_ERROR)
                 .body(ApiResponse.error("Internal server error"));
     }
+
+    /**
+     * Handles Product Service unavailable errors.
+     *
+     * @param exception Product Service availability exception
+     * @return HTTP 503 response
+     */
+    @ExceptionHandler(ProductServiceUnavailableException.class)
+    public ResponseEntity<ApiResponse<Void>> handleProductServiceUnavailableException(
+            ProductServiceUnavailableException exception
+    ) {
+        return ResponseEntity
+                .status(HttpStatus.SERVICE_UNAVAILABLE)
+                .body(ApiResponse.error(exception.getMessage()));
+    }
     
 }

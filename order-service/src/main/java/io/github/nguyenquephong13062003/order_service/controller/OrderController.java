@@ -119,5 +119,26 @@ public class OrderController {
                 ApiResponse.success(null, "Order deleted successfully")
         );
     }
+
+    /**
+     * Retrieves a product from Product Service through Eureka service discovery.
+     *
+     * <p>This endpoint is used to demonstrate dynamic service discovery
+     * without hard-coding the Product Service host and port.</p>
+     *
+     * @param productId product ID
+     * @return response received from Product Service
+     */
+    @GetMapping("/product/{productId}")
+    public ResponseEntity<ApiResponse<String>> findProductById(
+            @PathVariable Long productId
+    ) {
+        return ResponseEntity.ok(
+                ApiResponse.success(
+                        orderService.findProductById(productId),
+                        "Product retrieved through Eureka successfully"
+                )
+        );
+    }
     
 }
