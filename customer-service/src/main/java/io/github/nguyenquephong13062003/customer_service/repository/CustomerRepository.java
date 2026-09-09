@@ -19,4 +19,12 @@ public interface CustomerRepository extends JpaRepository<Customer, Long> {
      */
     Optional<Customer> findByEmail(String email);
 
+    /**
+     * Checks if a customer exists with the given email address.
+     *
+     * @param email the email address to check for existence
+     * @return true if a customer exists with the given email, false otherwise
+     */
+    boolean existsByEmail(String email);
+
 }

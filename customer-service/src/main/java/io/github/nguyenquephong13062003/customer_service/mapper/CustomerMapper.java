@@ -1,7 +1,9 @@
 package io.github.nguyenquephong13062003.customer_service.mapper;
 
 import io.github.nguyenquephong13062003.customer_service.dto.request.CustomerRequest;
+import io.github.nguyenquephong13062003.customer_service.dto.request.CustomerRequestDTO;
 import io.github.nguyenquephong13062003.customer_service.dto.response.CustomerResponse;
+import io.github.nguyenquephong13062003.customer_service.dto.response.CustomerResponseDTO;
 import io.github.nguyenquephong13062003.customer_service.entity.Customer;
 import org.springframework.stereotype.Component;
 
@@ -53,6 +55,34 @@ public class CustomerMapper {
         customer.setEmail(request.email());
         customer.setPassword(request.password());
         customer.setAddress(request.address());
+    }
+
+    /**
+     * Maps registration DTO to entity.
+     *
+     * @param request registration request
+     * @return customer entity
+     */
+    public Customer toEntity(CustomerRequestDTO request) {
+        return Customer.builder()
+                .fullName(request.fullName())
+                .email(request.email())
+                .password(request.password())
+                .build();
+    }
+
+    /**
+     * Maps customer entity to response DTO.
+     *
+     * @param customer customer entity
+     * @return customer response DTO
+     */
+    public CustomerResponseDTO toResponse1(Customer customer) {
+        return new CustomerResponseDTO(
+                customer.getId(),
+                customer.getFullName(),
+                customer.getEmail()
+        );
     }
     
 }

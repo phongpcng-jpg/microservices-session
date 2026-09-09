@@ -2,6 +2,8 @@ package io.github.nguyenquephong13062003.customer_service.controller;
 
 import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
+
+import org.springframework.boot.autoconfigure.condition.ConditionalOnProperty;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
@@ -18,6 +20,10 @@ import java.util.List;
  * This controller provides endpoints for creating, retrieving, updating, and deleting customer data.
  */
 @RestController
+@ConditionalOnProperty(
+    name = "app.customer-api.enabled",
+    havingValue = "true"
+)
 @RequestMapping("/api/customers")
 @RequiredArgsConstructor
 public class CustomerController {

@@ -12,5 +12,11 @@ spring:
       ddl-auto: update
     open-in-view: false
 
+app:
+  customer-api:
+    enabled: false
+  customer-api-v1:
+    enabled: true
+
 server:
   port: ${CUSTOMER_PORT:8081}
