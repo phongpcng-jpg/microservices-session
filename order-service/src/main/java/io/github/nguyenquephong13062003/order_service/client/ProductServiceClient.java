@@ -6,6 +6,8 @@ import org.springframework.cloud.client.ServiceInstance;
 import org.springframework.cloud.client.discovery.DiscoveryClient;
 import org.springframework.stereotype.Component;
 import org.springframework.web.client.RestClient;
+import org.springframework.web.client.RestClientException;
+import org.springframework.web.client.RestTemplate;
 
 import java.util.List;
 
@@ -24,6 +26,8 @@ public class ProductServiceClient {
      */
     private final DiscoveryClient discoveryClient;
 
+    private final RestTemplate restTemplate;
+
     /**
      * Discovers an available Product Service instance and retrieves
      * the product with the specified ID.
@@ -32,7 +36,7 @@ public class ProductServiceClient {
      * @return raw Product Service response
      * @throws IllegalStateException if no Product Service instance is available
      */
-    public String findProductById(Long productId) {
+    public String findProductByIdOld(Long productId) {
 
         List<ServiceInstance> instances =
                 discoveryClient.getInstances("PRODUCT-SERVICE");
@@ -56,5 +60,20 @@ public class ProductServiceClient {
                 .uri("/api/products/{id}", productId)
                 .retrieve()
                 .body(String.class);
+    }
+
+    public String findProductById(Long productId) {
+        try {
+            return restTemplate.getForObject(
+                    "http://PRODUCT-SERVICE/api/products/{id}",
+                    String.class,
+                    productId
+            );
+        } catch (RestClientException exception) {
+            throw new ProductServiceUnavailableException(
+                    "Product Service is unavailable",
+                    exception
+            );
+        }
     }
 }
