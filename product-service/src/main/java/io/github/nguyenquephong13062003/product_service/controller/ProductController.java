@@ -6,6 +6,7 @@ import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
+import io.github.nguyenquephong13062003.product_service.common.response.ApiResponse;
 import io.github.nguyenquephong13062003.product_service.dto.request.ProductRequest;
 import io.github.nguyenquephong13062003.product_service.dto.response.ProductResponse;
 import io.github.nguyenquephong13062003.product_service.service.IProductService;
@@ -28,78 +29,85 @@ public class ProductController {
     /**
      * Creates a new product.
      *
-     * @param request product creation request
-     * @return created product
+     * @param request the product creation request
+     * @return the created product response
      */
     @PostMapping
-    public ResponseEntity<ProductResponse> create(
-            @Valid @RequestBody ProductRequest request) {
-
+    public ResponseEntity<ApiResponse<ProductResponse>> create(
+            @Valid @RequestBody ProductRequest request
+    ) {
         ProductResponse response = productService.create(request);
 
         return ResponseEntity
                 .status(HttpStatus.CREATED)
-                .body(response);
+                .body(ApiResponse.success(response, "Product created successfully"));
     }
 
     /**
-     * Finds a product by ID.
+     * Retrieves a product by its ID.
      *
-     * @param id product ID
-     * @return product information
+     * @param id the product ID
+     * @return the product response
      */
     @GetMapping("/{id}")
-    public ResponseEntity<ProductResponse> findById(
-            @PathVariable Long id) {
+    public ResponseEntity<ApiResponse<ProductResponse>> findById(
+            @PathVariable Long id
+    ) {
+        ProductResponse response = productService.findById(id);
 
         return ResponseEntity.ok(
-                productService.findById(id)
+                ApiResponse.success(response, "Product retrieved successfully")
         );
     }
 
     /**
-     * Returns all products.
+     * Retrieves all products.
      *
-     * @return list of products
+     * @return a list of product responses
      */
     @GetMapping
-    public ResponseEntity<List<ProductResponse>> findAll() {
+    public ResponseEntity<ApiResponse<List<ProductResponse>>> findAll() {
+        List<ProductResponse> response = productService.findAll();
 
         return ResponseEntity.ok(
-                productService.findAll()
+                ApiResponse.success(response, "Products retrieved successfully")
         );
     }
 
     /**
      * Updates an existing product.
      *
-     * @param id product ID
-     * @param request product update request
-     * @return updated product
+     * @param id      the product ID
+     * @param request the product update request
+     * @return the updated product response
      */
     @PutMapping("/{id}")
-    public ResponseEntity<ProductResponse> update(
+    public ResponseEntity<ApiResponse<ProductResponse>> update(
             @PathVariable Long id,
-            @Valid @RequestBody ProductRequest request) {
+            @Valid @RequestBody ProductRequest request
+    ) {
+        ProductResponse response = productService.update(id, request);
 
         return ResponseEntity.ok(
-                productService.update(id, request)
+                ApiResponse.success(response, "Product updated successfully")
         );
     }
 
     /**
-     * Deletes a product.
+     * Deletes a product by its ID.
      *
-     * @param id product ID
-     * @return empty response
+     * @param id the product ID
+     * @return a response indicating the deletion status
      */
     @DeleteMapping("/{id}")
-    public ResponseEntity<Void> delete(
-            @PathVariable Long id) {
-
+    public ResponseEntity<ApiResponse<Void>> delete(
+            @PathVariable Long id
+    ) {
         productService.delete(id);
 
-        return ResponseEntity.noContent().build();
+        return ResponseEntity.ok(
+                ApiResponse.success(null, "Product deleted successfully")
+        );
     }
     
 }
