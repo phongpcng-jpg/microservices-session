@@ -1,3 +1,16 @@
 spring:
   application:
     name: order-service
+
+  datasource:
+    url: ${ORDER_URL:jdbc:postgresql://localhost:5432/order_db}
+    username: ${ORDER_USERNAME:postgres}
+    password: ${ORDER_PASSWORD:postgres}
+
+  jpa:
+    hibernate:
+      ddl-auto: update
+    open-in-view: false
+
+server:
+  port: ${ORDER_PORT:8083}
