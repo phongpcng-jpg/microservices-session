@@ -6,6 +6,7 @@ import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
+import io.github.nguyenquephong13062003.order_service.common.response.ApiResponse;
 import io.github.nguyenquephong13062003.order_service.dto.request.OrderRequest;
 import io.github.nguyenquephong13062003.order_service.dto.response.OrderResponse;
 import io.github.nguyenquephong13062003.order_service.service.IOrderService;
@@ -28,93 +29,95 @@ public class OrderController {
     /**
      * Creates a new order.
      *
-     * @param request order creation request
-     * @return created order
+     * @param request the order creation request
+     * @return the created order response
      */
     @PostMapping
-    public ResponseEntity<OrderResponse> create(
-            @Valid @RequestBody OrderRequest request) {
-
+    public ResponseEntity<ApiResponse<OrderResponse>> create(
+            @Valid @RequestBody OrderRequest request
+    ) {
         OrderResponse response = orderService.create(request);
 
         return ResponseEntity
                 .status(HttpStatus.CREATED)
-                .body(response);
+                .body(ApiResponse.success(response, "Order created successfully"));
     }
 
     /**
-     * Finds an order by ID.
+     * Retrieves an order by its ID.
      *
-     * @param id order ID
-     * @return order information
+     * @param id the order ID
+     * @return the order response
      */
     @GetMapping("/{id}")
-    public ResponseEntity<OrderResponse> findById(
+    public ResponseEntity<ApiResponse<OrderResponse>> findById(
             @PathVariable Long id) {
 
         return ResponseEntity.ok(
-                orderService.findById(id)
+                ApiResponse.success(orderService.findById(id), "Order retrieved successfully")
         );
     }
 
     /**
-     * Returns all orders.
+     * Retrieves all orders.
      *
-     * @return list of orders
+     * @return a list of order responses
      */
     @GetMapping
-    public ResponseEntity<List<OrderResponse>> findAll() {
+    public ResponseEntity<ApiResponse<List<OrderResponse>>> findAll() {
 
         return ResponseEntity.ok(
-                orderService.findAll()
+                ApiResponse.success(orderService.findAll(), "Orders retrieved successfully")
         );
     }
 
     /**
-     * Returns all orders belonging to a customer.
+     * Retrieves orders by customer ID.
      *
-     * @param customerId customer ID
-     * @return list of customer orders
+     * @param customerId the customer ID
+     * @return a list of order responses for the specified customer
      */
     @GetMapping("/customer/{customerId}")
-    public ResponseEntity<List<OrderResponse>> findByCustomerId(
+    public ResponseEntity<ApiResponse<List<OrderResponse>>> findByCustomerId(
             @PathVariable Long customerId) {
 
         return ResponseEntity.ok(
-                orderService.findByCustomerId(customerId)
+                ApiResponse.success(orderService.findByCustomerId(customerId), "Orders retrieved successfully")
         );
     }
 
     /**
      * Updates an existing order.
      *
-     * @param id order ID
-     * @param request order update request
-     * @return updated order
+     * @param id      the order ID
+     * @param request the order update request
+     * @return the updated order response
      */
     @PutMapping("/{id}")
-    public ResponseEntity<OrderResponse> update(
+    public ResponseEntity<ApiResponse<OrderResponse>> update(
             @PathVariable Long id,
             @Valid @RequestBody OrderRequest request) {
 
         return ResponseEntity.ok(
-                orderService.update(id, request)
+                ApiResponse.success(orderService.update(id, request), "Order updated successfully")
         );
     }
 
     /**
-     * Deletes an order.
+     * Deletes an order by its ID.
      *
-     * @param id order ID
-     * @return empty response
+     * @param id the order ID
+     * @return a response indicating the deletion status
      */
     @DeleteMapping("/{id}")
-    public ResponseEntity<Void> delete(
+    public ResponseEntity<ApiResponse<Void>> delete(
             @PathVariable Long id) {
 
         orderService.delete(id);
 
-        return ResponseEntity.noContent().build();
+        return ResponseEntity.ok(
+                ApiResponse.success(null, "Order deleted successfully")
+        );
     }
     
 }
